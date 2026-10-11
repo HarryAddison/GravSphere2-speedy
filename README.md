@@ -10,6 +10,8 @@ This repository is a refactoring of the original release into an installable Pyt
 interface, a YAML input file, unit tests and documentation. Numerical results are unchanged
 (see [docs/migration.md](docs/migration.md)).
 
+Full documentation can be found here: [/harryaddison.github.io/GravSphere2-speedy/](harryaddison.github.io/GravSphere2-speedy/)
+
 ## Install
 
 ```bash
