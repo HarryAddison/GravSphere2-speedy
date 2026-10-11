@@ -1,6 +1,6 @@
-site_name: GravSphere2
+site_name: GravSphere2-Speedy
 site_description: Higher-order Jeans mass modelling of spherical stellar systems
-repo_url: https://github.com/dadams42/GravSphere2
+repo_url: https://github.com/HarryAddison/GravSphere2-speedy
 theme:
   name: material
   features:

@@ -10,6 +10,7 @@ readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.9"
 authors = [
+  { name = "Harry Addison" },
   { name = "Andrés Bañares Hernández" },
   { name = "Justin Read" },
   { name = "Mariana P. Júlio" },
@@ -37,7 +38,7 @@ docs = ["mkdocs>=1.5", "mkdocs-material>=9"]
 gravsphere2 = "gravsphere2.cli:main"
 
 [project.urls]
-Repository = "https://github.com/dadams42/GravSphere2"
+Repository = "https://github.com/HarryAddison/GravSphere2-speedy"
 
 [tool.setuptools.packages.find]
 where = ["src"]
