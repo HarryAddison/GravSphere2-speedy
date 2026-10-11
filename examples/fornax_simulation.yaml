@@ -1,0 +1,53 @@
+# GravSphere2 input file: simulated Fornax-like dwarf galaxy
+# 100 tracers with line-of-sight velocities and proper motions, individual
+# (bin-free) fitting of 10,000 photometric positions, and a free stellar mass.
+#
+# Run with:   gravsphere2 -i examples/fornax_simulation.yaml
+
+name: fornax_simulation
+
+output:
+  directory: /vol/ph/astro_data/haddison/gravsphere2/fornax-simulation/
+  make_plots: true
+
+data:
+  directory: ../data/fornax_simulation
+  # Other kinematic files: forall1k.txt (1k tracers, LOS + PMs);
+  # LOS only (3 rows, set proper_motions: false): fornaxlos10/25/50/100/1k.txt
+  # and fornaxlos.txt (all tracers).
+  kinematics_file: forall100.txt
+  proper_motions: true
+  photometry:
+    mode: individual                 # fit individual stellar positions (bin-free)
+    source: file                     # or `kinematic_tracers` to reuse the kinematic radii
+    file: fornax_phot_10k.txt
+  half_light_radius: median          # median of the photometric radii (or a number in kpc)
+  escape_velocity_check: false
+
+grids:
+  tracer_points: 300
+
+stellar_mass:
+  value: 4.3e7                       # Msun; a free parameter with flat prior of
+  fractional_error: 0.25             # value * (1 +/- fractional_error)
+
+priors:
+  anisotropy:
+    beta0: [-1.0, 1.0]
+    beta_inf: [-1.0, 1.0]
+    log10_r_beta: [-2.0, 0.0]
+    eta: [1.0, 3.0]
+  mass:
+    log10_M200: [7.5, 11.5]
+    c200: [1.0, 50.0]
+    rc: [0.01, 10.0]
+    n: [0.0, 1.0]
+    rt: [1.0, 20.0]
+    delta: [3.01, 5.0]
+
+sampler:
+  nlive: 500
+  ncpus: 1
+  use_stop: true
+  maxiter: 300000
+  checkpoint_name: fornax_pm100_chk

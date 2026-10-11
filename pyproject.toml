@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gravsphere2"
+version = "2.0.0"
+description = "Higher-order spherical Jeans modelling of galaxies and star clusters"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.9"
+authors = [
+  { name = "Andrés Bañares Hernández" },
+  { name = "Justin Read" },
+  { name = "Mariana P. Júlio" },
+]
+keywords = ["astronomy", "dark matter", "Jeans equations", "dynamics", "nested sampling"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Intended Audience :: Science/Research",
+  "Topic :: Scientific/Engineering :: Astronomy",
+]
+dependencies = [
+  "numpy>=1.24",
+  "scipy>=1.11",
+  "pyyaml>=6.0",
+  "dynesty>=2.1",
+]
+
+[project.optional-dependencies]
+plots = ["matplotlib>=3.7", "corner>=2.2"]
+dev = ["pytest>=7", "pytest-cov", "matplotlib>=3.7"]
+docs = ["mkdocs>=1.5", "mkdocs-material>=9"]
+
+[project.scripts]
+gravsphere2 = "gravsphere2.cli:main"
+
+[project.urls]
+Repository = "https://github.com/dadams42/GravSphere2"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"

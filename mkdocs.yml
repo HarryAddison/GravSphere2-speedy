@@ -1,0 +1,31 @@
+site_name: GravSphere2
+site_description: Higher-order Jeans mass modelling of spherical stellar systems
+repo_url: https://github.com/dadams42/GravSphere2
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - content.code.copy
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - toc:
+      permalink: true
+nav:
+  - Home: index.md
+  - Getting started:
+      - Installation: installation.md
+      - Quick start: quickstart.md
+  - User guide:
+      - Input file reference: input-file.md
+      - Data formats: data-formats.md
+      - Outputs: outputs.md
+      - Method: method.md
+  - Reference:
+      - Python API: python-api.md
+      - Migration from the scripts: migration.md
+      - Development: development.md

@@ -1,0 +1,2 @@
+[console_scripts]
+gravsphere2 = gravsphere2.cli:main

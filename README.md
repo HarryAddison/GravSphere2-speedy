@@ -1,120 +1,96 @@
 # GravSphere2
 
-GravSphere2 is an improved solver of the spherical higher-order Jeans equations, designed to mass-model systems of stellar tracers in equilibrium such as galaxies and star clusters with minimal bias and maximizing information content. It improves on previous versions of GravSphere and other methods by removing the need for binning, using self-consistent non-Gaussian velocity distribution function modeling and performing a fully general treatment of higher moments, solving the fourth-order Jeans equations. 
+GravSphere2 is a solver of the spherical higher-order Jeans equations, designed to mass-model systems of
+stellar tracers in equilibrium, such as galaxies and star clusters, with minimal bias and maximal information
+content. It improves on previous versions of GravSphere and other methods by removing the need for binning, by
+using self-consistent non-Gaussian velocity distribution modelling and by a fully general treatment of higher
+moments, solving the fourth-order Jeans equations.
 
-Here is some important information about GravSphere2 (for more information, check also python source files of the code):
+This repository is a refactoring of the original release into an installable Python package with a command-line
+interface, a YAML input file, unit tests and documentation. Numerical results are unchanged
+(see [docs/migration.md](docs/migration.md)).
 
-:::: DEPENDENCIES ::::
-To run these codes, you will need to install:
-python3.x, numpy, scipy, matplotlib and dynesty
+## Install
 
-The code has been verified to work with:
-python 3.10.12
-scipy version 1.15.1
-numpy version 1.26.4
-matplotlib version 3.9.0
-dynesty version 2.1.5
-corner version 2.2.2
+```bash
+git clone https://github.com/dadams42/GravSphere2.git && cd GravSphere2
+python3 -m venv .venv && source .venv/bin/activate
+pip install -e ".[plots]"          # numpy, scipy, pyyaml, dynesty (+ matplotlib, corner)
+```
 
+Python 3.9+ is required. Use `".[dev]"` for the tests and `".[docs]"` for the documentation tools.
 
-:::: CITATIONS ::::
-If using this code, please acknowledge its use and cite the following code papers:
+## Run
 
-Bañares-Hernández et al. (release paper): https://ui.adsabs.harvard.edu/abs/2025arXiv250924103B/abstract 
+```bash
+gravsphere2 -i examples/gaia_challenge_plumcusp.yaml --dry-run     # check data/setup in seconds
+gravsphere2 -i examples/gaia_challenge_plumcusp.yaml --ncpus 8     # run the sampler
+gravsphere2 -i examples/gaia_challenge_plumcusp.yaml --plots-only  # re-make the plots
+python3 -m gravsphere2 -i examples/fornax_simulation.yaml          # equivalent module form
+```
 
-and its link to its GitHub page: https://github.com/dadams42/GravSphere2 
+| Option | Meaning |
+| ------ | ------- |
+| `-i FILE` | YAML input file (required) |
+| `-o DIR` | override the output directory |
+| `--nlive N`, `--ncpus N`, `--seed N` | override the sampler settings |
+| `--resume` | continue from the checkpoint file |
+| `--dry-run` | validate, load data and evaluate the likelihood once |
+| `--plots-only` | plots from the saved samples of a finished run |
+| `--no-plots`, `-v`, `--version` | skip plots, debug logging, version |
 
-Former GravSphere papers:
+## Input file
 
-https://ui.adsabs.harvard.edu/abs/2017MNRAS.471.4541R/abstract
-https://ui.adsabs.harvard.edu/abs/2018MNRAS.481..860R/abstract
-https://ui.adsabs.harvard.edu/abs/2020MNRAS.498..144G/abstract
-https://ui.adsabs.harvard.edu/abs/2021arXiv210211890C/abstract
-https://ui.adsabs.harvard.edu/abs/2025A%26A...693A.104B/
+Everything the user can set (data files, priors, radial grids, stellar mass, sampler options, output) is in one
+YAML file. See `examples/` for the three examples of the release paper (Gaia Challenge cusp and core mocks and a
+Fornax-like simulation), `examples/template_full.yaml` for every option with its default, and
+[docs/input-file.md](docs/input-file.md) for the reference.
 
-For the velocity PDF modeling: 
-https://ui.adsabs.harvard.edu/abs/2020MNRAS.499.5806S/abstract 
-Check the GitHub repo at: https://github.com/jls713/gh_alternative 
+```yaml
+name: my_dwarf
+data:
+  directory: ../data/my_dwarf
+  kinematics_file: stars.txt        # rows: R, vLOS, err, vPMt, err, vPMR, err
+  proper_motions: true
+  photometry: {mode: individual, file: positions.txt}
+  half_light_radius: median
+stellar_mass: {value: 4.3e7}
+sampler: {nlive: 500, ncpus: 8}
+```
 
-You should also cite the use of dynesty for the sampling method:
-https://ui.adsabs.harvard.edu/abs/2020MNRAS.493.3132S/abstract
-And use the sampler.citations option for all the related papers
-(https://dynesty.readthedocs.io/en/latest/references.html)
+## Repository layout
 
-If using the J-factor integral calculation, please cite also:
-https://ui.adsabs.harvard.edu/abs/2020JCAP...09..004A/abstract
+```text
+src/gravsphere2/   the package (see docs/method.md for a module overview)
+tests/             unit tests (pytest / unittest)
+examples/          input files, template, Python API example
+data/              Gaia Challenge mocks and simulated Fornax data
+docs/, mkdocs.yml  documentation (mkdocs serve)
+```
 
-If using the Gaia Challenge mock data, please cite:
-https://ui.adsabs.harvard.edu/abs/2021MNRAS.501..978R/abstract
-https://ui.adsabs.harvard.edu/abs/2011ApJ...742...20W/abstract 
-http://astrowiki.ph.surrey.ac.uk/dokuwiki/doku.php?id=start
+## Tests and docs
 
-If using the simulated dwarf galaxy data, please cite:
-https://ui.adsabs.harvard.edu/abs/2025arXiv250418617T/abstract
+```bash
+pytest                 # or: python -m unittest discover -s tests -t .
+mkdocs serve           # needs the [docs] extra
+```
 
-:::: BUGS ::::
-If you spot any bugs (or have any questions), please let us know!
+## Citations
 
-:::: NOTES ::::
-Note that this public release of the code is distinct from
-the previous versions of GravSphere that don't use higher-order
-Jeans or individual velocities (not 'bin free').
+If you use this code, please acknowledge it and cite the release paper
+[Bañares-Hernández et al. (2025)](https://ui.adsabs.harvard.edu/abs/2025arXiv250924103B/abstract) and the
+[GitHub page](https://github.com/dadams42/GravSphere2). The complete list of papers to cite (previous GravSphere
+papers, the velocity-PDF method, dynesty, the J-factor integral and the example data) is in
+[docs/index.md](docs/index.md#citing).
 
-Former versions of GravSphere include
-GravSphere + binulator (https://github.com/justinread/gravsphere)
-which uses binning and Virial Shape Parameters
-and PyGravSphere, which has non-parametric 
-mass modeling and the original binning  methodology,
-available at Anna Genina's 
-independent public release here: 
-https://github.com/AnnaGenina/pyGravSphere
-new
+## Notes
 
-If you are not familiar with dynesty, check its website: https://dynesty.readthedocs.io/ 
+The example notebooks of the original release (`run_example_notebook.ipynb`,
+`plots_example_notebook_vf.ipynb`) are replaced by the command line and by `gravsphere2.plotting` /
+`gravsphere2.analysis`. Former versions of GravSphere:
+[GravSphere + binulator](https://github.com/justinread/gravsphere) and
+[pyGravSphere](https://github.com/AnnaGenina/pyGravSphere).
 
-:::: EXAMPLES ::::
-We have included the examples addressed in Bañares-Hernández et al.
-featuring a Fornax-like simulated galaxy and the Gaia Challenge mocks
+Licensed under the MIT license (see `LICENSE`). Bugs and questions are welcome.
 
-To run an example: 
-
-1. By default, the Output directory is set in the same file, if 
-   you want to change this, this can be modified in the initialise_ files,
-   where you specify the data for each galaxy. Here you also decide whether
-   to fit proper motions, include a massive stellar component, 'bin free' 
-   fitting for the photometric tracers (not just kinematic ones) etc.
-   Update: we have included in initialise_ files the option to create Output
-   directories automatically if they don't exist. By default this includes
-   a folder with the name of your galaxy and Plots and Sampler Chains folders.
-
-3. The galaxy / object is selected by importing the initialisation file at 
-   the beginning of the gravsphere2.py file, where the likelihood and other
-   arguments for the fit (e.g. priors) are specified.
-
-4. We have set some scripts to show an example of running the code
-  (run_example_notebook.ipynb and run_multcpu_example.py for parallel programming
-   with a multi-CPU machine / cluster). This will create and store a 
-   checkpoint file from which all data can be retrieved and be 
-   run subsequently if needed (these are saved by default in the Sampler
-   Chains subfolders). Note that the script for running is separate from
-   the gravsphere2.py file, so you'll need to import the file and then
-   do the run with dynesty (as we do in the example notebook and the Python script). 
-
-6. We have also created a notebook (plots_example_notebook.ipynb) where we 
-   show examples of plotting density, slope, anisotropy, dispersion, and 
-   kurtosis profiles, similar to those from Bañares-Hernández et al. The
-   output plots are stored in the Plots subfolders of the Output directory.
-
-
-:::: Setting up your own model ::::
-
-To input your own data, you should create your own initiliase_ file with
-the same format as the ones from the examples. This will include tracer
-positions and velocities, data for the tracer profiles (positions, which 
-can be done without binning, or a binned profile if only that is available),
-and information for setting up the priors. You can also change the GravSphere2
-file if you e.g. want a different mass model, introduce new parameters etc.
-
-Andrés Bañares Hernández, Justin Read, & Mariana P. Júlio| 09/09/25 
-
-
+Andrés Bañares Hernández, Justin Read & Mariana P. Júlio

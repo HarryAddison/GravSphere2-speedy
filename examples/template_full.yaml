@@ -1,0 +1,63 @@
+# GravSphere2: complete input-file template listing EVERY option with its default.
+# Copy this file, then edit the values for your own system.
+# Relative paths are resolved relative to the directory of this file.
+# Note: write scientific notation with a sign or dot (4.3e+7 or 4.3e7 both work).
+
+name: my_system                  # run name; outputs go to <output.directory>/<name>/
+
+output:
+  directory: output              # base output directory
+  make_plots: true               # create posterior plots after sampling
+  use_latex: false               # render plot text with LaTeX (needs a TeX install)
+  profile_samples: 300           # posterior draws used for profile credible bands
+  n_radii: 100                   # radii per profile plot
+  plot_radius_range: null        # [rmin, rmax] in kpc; null -> [Rhalf/10, 10 Rhalf]
+
+data:
+  directory: ../data/gaia_challenge     # folder containing the data files
+  kinematics_file: 1krltr_vels_plumcuspom.txt   # one ROW per quantity (see docs)
+  proper_motions: true           # 7 rows (LOS + PM) if true, 3 rows (LOS only) if false
+  photometry:
+    mode: binned                 # binned | individual
+    file: photplumcusp.txt       # rows: R, surface density, error (binned) or 1 row of radii
+    source: file                 # file | kinematic_tracers (individual mode only)
+  half_light_radius: 0.116       # kpc, reference scale; `median` allowed for individual mode
+  escape_velocity_check: false   # reject models in which tracers exceed the escape velocity
+
+grids:
+  rmin: null                     # Jeans-grid inner radius [kpc]; null -> min(Rhalf/100, min(R)/10)
+  rmax: null                     # Jeans-grid outer radius [kpc]; null -> max(100 Rhalf, 2 max(R))
+  nonnegative_radius: null       # fourth moments must be >= 0 inside this radius; null -> rmax/2
+  tracer_rmin: null              # tracer-profile grid; null -> same as the Jeans grid
+  tracer_rmax: null
+  tracer_points: 300             # points of the tracer-profile grid
+
+stellar_mass:
+  value: 0.0                     # Msun; 0 -> dark-matter-only massless tracers
+  fractional_error: 0.25         # flat prior value * (1 +/- fractional_error) when value > 0
+
+priors:
+  tracer:                        # used for binned photometry
+    reference_parameters: [203.7268193701383, 0.1, 2, 5, 0.1]   # [rho0, r0, alpha, beta, gamma]
+    tolerance: 0.5               # flat prior of +/- tolerance around the reference values
+  anisotropy:                    # symmetrised anisotropy; same ranges for both orders
+    beta0: [-1.0, 1.0]
+    beta_inf: [-1.0, 1.0]
+    log10_r_beta: [-2.0, 0.0]
+    eta: [1.0, 3.0]
+  mass:                          # coreNFWtides
+    log10_M200: [7.5, 11.5]
+    c200: [1.0, 100.0]
+    rc: [0.01, 10.0]             # kpc, sampled in log10
+    n: [0.0, 1.0]
+    rt: [1.0, 20.0]              # kpc, sampled in log10
+    delta: [3.01, 5.0]
+
+sampler:
+  nlive: 500                     # live points (aim for >= a few times ndims^2)
+  ncpus: 1                       # >1 evaluates the likelihood in parallel
+  use_stop: true                 # stop automatically when converged
+  maxiter: null                  # optional hard limit on iterations
+  checkpoint_name: checkpoint    # checkpoint file in "Sampler Chains"
+  seed: null                     # integer for reproducible runs
+  print_progress: true

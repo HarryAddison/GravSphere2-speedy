@@ -1,0 +1,62 @@
+# GravSphere2 input file: Gaia Challenge mock, cored dark matter (PlumCoreOM)
+# 1000 tracers with line-of-sight velocities and proper motions.
+#
+# Run with:   gravsphere2 -i examples/gaia_challenge_plumcore.yaml
+# Relative paths are resolved relative to the directory of this file.
+
+name: gaia_challenge_plumcore        # results go to <output.directory>/<name>/
+
+output:
+  directory: ../output
+  make_plots: true                   # posterior plots after the run (needs matplotlib)
+
+data:
+  directory: ../data/gaia_challenge
+  # One row per quantity. With proper motions the 7 rows are:
+  #   R, vLOS, vLOS_err, vPMt, vPMt_err, vPMR, vPMR_err
+  # (kpc and km/s; velocities relative to the system mean).
+  kinematics_file: 1krltr_vels_plumcoreom.txt     # also: 100rltr_..., 10krltr_...
+  proper_motions: true
+  photometry:
+    mode: binned                     # binned (R, surface density, error) | individual
+    file: photplumcore.txt
+  half_light_radius: 0.2760552110422084   # kpc; only a reference scale
+  # Reject models that cannot retain the observed stars. Useful for few tracers
+  # or if individual velocities differ greatly from the dispersion.
+  escape_velocity_check: false
+
+grids:                               # null -> defaults of the reference code
+  rmin: null                         # min(Rhalf/100, min(R)/10)
+  rmax: null                         # max(100 Rhalf, 2 max(R))
+  nonnegative_radius: null           # rmax / 2
+  tracer_points: 300
+
+stellar_mass:
+  value: 0.0                         # 0 -> massless tracer (dark-matter-only)
+
+priors:
+  tracer:
+    # Pre-fitted [rho0, r0, alpha, beta, gamma] of the alpha-beta-gamma tracer
+    # profile (e.g. from binulator, a direct fit, or a Plummer matched to the
+    # central density and ~Rhalf). Flat priors span +/- `tolerance` around it.
+    reference_parameters: [13, 0.25, 2, 5, 0.1]
+    tolerance: 0.5
+  anisotropy:                        # symmetrised anisotropy ranges [min, max]
+    beta0: [-0.01, 0.01]
+    beta_inf: [-0.1, 1.0]
+    log10_r_beta: [-2.0, 0.0]
+    eta: [1.0, 3.0]
+  mass:                              # coreNFWtides
+    log10_M200: [7.5, 11.5]
+    c200: [1.0, 100.0]
+    rc: [0.01, 10.0]                 # kpc, sampled in log10
+    n: [0.0, 1.0]
+    rt: [1.0, 20.0]                  # kpc, sampled in log10
+    delta: [3.01, 5.0]
+
+sampler:
+  nlive: 500
+  ncpus: 1                           # >1 uses multiprocessing
+  use_stop: true
+  maxiter: 300000
+  checkpoint_name: gaia_plumcore_1k_chk
