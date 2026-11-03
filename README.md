@@ -1,6 +1,6 @@
 # GravSphere2-speedy
 
-NOTE: This is an experimental repository of a modified version of the Jeans modelling software GravSphere2 (https://github.com/dadams42/GravSphere2), it is experimental and has not been extensively tested, it is 
+NOTE: This is an experimental repository of a modified version of the Jeans modelling software GravSphere2 (https://github.com/dadams42/GravSphere2). It is experimental and has not been extensively tested. It is 
 NOT an official release.
 
 GravSphere2 is a solver of the spherical higher-order Jeans equations, designed to mass-model systems of
