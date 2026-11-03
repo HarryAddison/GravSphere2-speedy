@@ -1,4 +1,7 @@
-# GravSphere2
+# GravSphere2-speedy
+
+NOTE: This is an experimental repository of a modified version of the Jeans modelling software GravSphere2 (https://github.com/dadams42/GravSphere2), it is experimental and has not been extensively tested, it is 
+NOT an official release.
 
 GravSphere2 is a solver of the spherical higher-order Jeans equations, designed to mass-model systems of
 stellar tracers in equilibrium, such as galaxies and star clusters, with minimal bias and maximal information
@@ -95,4 +98,4 @@ The example notebooks of the original release (`run_example_notebook.ipynb`,
 
 Licensed under the MIT license (see `LICENSE`). Bugs and questions are welcome.
 
-Andrés Bañares Hernández, Justin Read & Mariana P. Júlio
+
